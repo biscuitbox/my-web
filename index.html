@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나를 소개하는 페이지</title>
+  <style>
+    /* ----------------------------------
+       [기본 스타일 및 스타일 리셋]
+       외부 라이브러리 없이 시스템 기본 서체 및 가상 색상 변수 사용
+    ---------------------------------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-color: #f0f8ff;         /* 맑은 하늘빛 배경 */
+      --card-bg: #ffffff;          /* 카드 배경 (흰색) */
+      --primary-color: #0077b6;     /* 밝고 시원한 블루 모티브 */
+      --secondary-color: #00b4d8;   /* 포인트 에메랄드 블루 */
+      --text-main: #1d3557;         /* 가독성 높은 짙은 네이비 */
+      --text-sub: #457b9d;          /* 서브 텍스트 */
+      --border-radius: 16px;       /* 둥근 코너 */
+      --shadow: 0 8px 20px rgba(0, 119, 182, 0.08); /* 은은한 그림자 */
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans KR", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      word-break: keep-all; /* 한글 단어 단위 줄바꿈 */
+      overflow-x: hidden;  /* 가로 스크롤 방지 */
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    /* ----------------------------------
+       [레이아웃 및 콘테이너]
+    ---------------------------------- */
+    .container {
+      width: 100%;
+      max-width: 600px; /* 모바일/태블릿에 최적화된 최대 너비 */
+      margin: 0 auto;
+    }
+
+    /* ----------------------------------
+       [헤더 섹션]
+       큰 제목과 한 줄 소개
+    ---------------------------------- */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+
+    header p {
+      font-size: 1.35rem;
+      color: var(--text-sub);
+      font-weight: 500;
+    }
+
+    /* ----------------------------------
+       [카드 목록 및 카드 카드 섹션]
+    ---------------------------------- */
+    .card-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      border: 2px solid transparent;
+      outline: none;
+    }
+
+    /* 마우스 호버 및 포커스 효과 */
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0, 119, 182, 0.15);
+      border-color: var(--secondary-color);
+    }
+
+    .card:focus-visible {
+      border-color: var(--primary-color);
+    }
+
+    /* 카드 헤더 (항상 보이는 부분) */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 접기/펼치기 화살표 아이콘 (Pure CSS) */
+    .toggle-icon {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--secondary-color);
+      font-size: 1.2rem;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+
+    /* ----------------------------------
+       [아코디언 애니메이션 동작]
+    ---------------------------------- */
+    .card-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease, margin-top 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+      font-size: 1.15rem;
+      color: #4a5568;
+      line-height: 1.7;
+    }
+
+    /* 펼쳐졌을 때 스타일 */
+    .card.active .card-content {
+      max-height: 200px; /* 충분한 높이 확보 */
+      transition: max-height 0.3s cubic-bezier(0.9, 0, 0.8, 0.2), opacity 0.3s ease, margin-top 0.3s ease;
+      opacity: 1;
+      margin-top: 16px;
+      border-top: 1px dashed #e2e8f0;
+      padding-top: 16px;
+    }
+
+    .card.active .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    /* ----------------------------------
+       [모바일 대응 미디어 쿼리]
+    ---------------------------------- */
+    @media (max-width: 480px) {
+      body {
+        padding: 24px 16px;
+      }
+
+      header h1 {
+        font-size: 2.2rem;
+      }
+
+      header p {
+        font-size: 1.15rem;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card-title {
+        font-size: 1.3rem;
+      }
+
+      .card-content {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 헤더: 별명 및 한 줄 소개 -->
+    <header>
+      <h1>코딩하는 파도 🌊</h1>
+      <p>새로운 도전을 즐기는 호기심 많은 탐험가입니다.</p>
+    </header>
+
+    <!-- 카드 3개 목록 -->
+    <main class="card-list">
+      
+      <!-- 카드 1: 좋아하는 것 -->
+      <article class="card" tabindex="0" role="button" aria-expanded="false">
+        <div class="card-header">
+          <h2 class="card-title">💙 좋아하는 것</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-content">
+          조용한 카페에서 잔잔한 음악을 들으며 갓 볶은 원두로 내린 아메리카노를 마시는 시간을 제일 좋아합니다.
+        </div>
+      </article>
+
+      <!-- 카드 2: 요즘 관심사 -->
+      <article class="card" tabindex="0" role="button" aria-expanded="false">
+        <div class="card-header">
+          <h2 class="card-title">✨ 요즘 관심사</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-content">
+          누구나 쉽게 사용할 수 있는 웹사이트 디자인과 인터랙티브한 프론트엔드 애니메이션 효과에 푹 빠져 있습니다.
+        </div>
+      </article>
+
+      <!-- 카드 3: 올해 해 보고 싶은 것 -->
+      <article class="card" tabindex="0" role="button" aria-expanded="false">
+        <div class="card-header">
+          <h2 class="card-title">🚀 올해 해 보고 싶은 것</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="card-content">
+          나만의 소소한 아이디어를 직접 담은 인디 웹 서비스를 만들어서 사람들에게 공개하고 피드백을 받아보고 싶어요!
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+  <!-- 자바스크립트: 카드를 누르면 내용이 펼쳐지거나 접힘 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.card');
+
+      cards.forEach(card => {
+        // 카드 클릭 이벤트
+        card.addEventListener('click', () => {
+          toggleCard(card);
+        });
+
+        // 키보드 접근성 지원 (Enter, Space 키 press 시 작동)
+        card.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleCard(card);
+          }
+        });
+      });
+
+      // 카드 상태 토글 함수
+      function toggleCard(selectedCard) {
+        const isActive = selectedCard.classList.contains('active');
+
+        // 선택한 카드의 상태 전환
+        if (isActive) {
+          selectedCard.classList.remove('active');
+          selectedCard.setAttribute('aria-expanded', 'false');
+        } else {
+          selectedCard.classList.add('active');
+          selectedCard.setAttribute('aria-expanded', 'true');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
